@@ -134,4 +134,13 @@ def _find_peaks(self, metric):
                 }
         return peaks
 
+def _calculate_fatality_rates(self):
+        """Calculate case fatality rates"""
+        if 'total_deaths' not in self.df.columns or 'total_cases' not in self.df.columns:
+            return None
+            
+        latest = self.df.groupby('location').last()
+        return (latest['total_deaths'] / latest['total_cases'] * 100).round(2)
+
+
 
