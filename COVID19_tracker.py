@@ -181,3 +181,31 @@ def visualize(self):
             if self.analysis['per_million_stats'] is not None:
                 self._plot_per_million(pdf)
 
+
+def _plot_timeseries(self, pdf):
+        """Plot time series of key metrics"""
+        fig, axes = plt.subplots(2, 1, figsize=(12, 8))
+        
+        # Cases
+        if 'new_cases_7day_avg' in self.df.columns:
+            sns.lineplot(
+                data=self.df, x='date', y='new_cases_7day_avg', 
+                hue='location', ax=axes[0]
+            )
+            axes[0].set_title('7-Day Average of New Cases')
+            axes[0].set_ylabel('Cases')
+        
+        # Deaths
+        if 'new_deaths_7day_avg' in self.df.columns:
+            sns.lineplot(
+                data=self.df, x='date', y='new_deaths_7day_avg', 
+                hue='location', ax=axes[1]
+            )
+            axes[1].set_title('7-Day Average of New Deaths')
+            axes[1].set_ylabel('Deaths')
+        
+        plt.tight_layout()
+        pdf.savefig(fig)
+        plt.savefig(f"{self.output_png_prefix}Timeseries.png")
+        plt.close()
+
