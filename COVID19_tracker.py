@@ -114,3 +114,24 @@ def analyze(self):
             "trend_analysis": self._analyze_trends()
         }
         return self.analysis
+
+
+def _find_peaks(self, metric):
+        """Find peak values and dates for a metric"""
+        if metric not in self.df.columns:
+            return None
+            
+        peaks = {}
+        for country in self.countries:
+            country_data = self.df[self.df['location'] == country]
+            if not country_data.empty:
+                max_idx = country_data[metric].idxmax()
+                peaks[country] = {
+                    "value": country_data.loc[max_idx, metric],
+                    "date": country_data.loc[max_idx, 'date'],
+                    "per_million": country_data.loc[max_idx, f'{metric}_per_million'] 
+                        if f'{metric}_per_million' in country_data.columns else None
+                }
+        return peaks
+
+
