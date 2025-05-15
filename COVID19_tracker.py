@@ -275,3 +275,18 @@ def _plot_per_million(self, pdf):
         pdf.savefig(fig)
         plt.savefig(f"{self.output_png_prefix}PerMillion.png")
         plt.close()
+
+    
+def generate_report(self):
+        """Generate comprehensive text report"""
+        if not hasattr(self, 'analysis'):
+            print("No analysis to report!")
+            return None
+
+        report = f"""
+        COVID-19 ANALYSIS REPORT
+        Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+        Latest data available: {self.analysis['latest_date'].strftime('%Y-%m-%d')}
+        Countries analyzed: {len(self.countries)}
+        
+        {'='*50}
