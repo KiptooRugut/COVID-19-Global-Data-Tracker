@@ -73,3 +73,23 @@ def load_data(self, filepath):
         except Exception as e:
             print(f"Error loading data: {str(e)}")
             return False
+        
+def _clean_data(self):
+        """Data cleaning with modern pandas methods"""
+        # Forward fill and then fill remaining NAs with 0
+        for col in self.metrics:
+            if col in self.df.columns:
+                self.df[col] = self.df[col].ffill().fillna(0)
+        
+        # Calculate derived metrics
+        self.df['case_fatality_rate'] = (self.df['total_deaths'] / self.df['total_cases'] * 100).replace([np.inf, -np.inf], 0)
+        
+        # Calculate rolling metrics
+        for country in self.countries:
+            country_mask = self.df['location'] == country
+            for metric in ['new_cases', 'new_deaths']:
+                if metric in self.df.columns:
+                    self.df.loc[country_mask, f'{metric}_7day_avg'] = (
+                        self.df.loc[country_mask, metric]
+                        .rolling(window=7).mean()
+                    )
