@@ -93,3 +93,24 @@ def _clean_data(self):
                         self.df.loc[country_mask, metric]
                         .rolling(window=7).mean()
                     )
+
+
+def analyze(self):
+        """Perform analysis with available data"""
+        if not hasattr(self, 'df') or self.df.empty:
+            print("No data to analyze!")
+            return None
+
+        latest_date = self.df['date'].max()
+        latest_data = self.df[self.df['date'] == latest_date]
+        
+        self.analysis = {
+            "latest_date": latest_date,
+            "peak_cases": self._find_peaks('new_cases'),
+            "peak_deaths": self._find_peaks('new_deaths'),
+            "total_stats": latest_data.groupby('location')[['total_cases', 'total_deaths']].last(),
+            "fatality_rates": self._calculate_fatality_rates(),
+            "per_million_stats": self._calculate_per_million_stats(),
+            "trend_analysis": self._analyze_trends()
+        }
+        return self.analysis
