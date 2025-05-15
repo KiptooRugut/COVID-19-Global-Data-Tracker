@@ -164,3 +164,20 @@ def _analyze_trends(self):
         return recent.groupby('location')[trend_metrics].agg(['mean', 'max', 'min', 'last'])
 
 
+def visualize(self):
+        """Generate visualizations with available data"""
+        if not hasattr(self, 'df') or self.df.empty:
+            print("No data to visualize!")
+            return
+
+        print("Creating visualizations...")
+        with PdfPages(self.output_pdf) as pdf:
+            self._plot_timeseries(pdf)
+            self._plot_peaks(pdf)
+            
+            if self.analysis['fatality_rates'] is not None:
+                self._plot_fatality_rates(pdf)
+                
+            if self.analysis['per_million_stats'] is not None:
+                self._plot_per_million(pdf)
+
