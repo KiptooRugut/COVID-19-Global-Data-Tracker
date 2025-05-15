@@ -156,5 +156,11 @@ def _calculate_per_million_stats(self):
         return stats if stats else None
 
 
+def _analyze_trends(self):
+        """Analyze recent trends (last 30 days)"""
+        recent = self.df[self.df['date'] > (self.df['date'].max() - pd.Timedelta(days=30))]
+        
+        trend_metrics = [m for m in self.metrics if m.startswith(('new_', 'total_'))]
+        return recent.groupby('location')[trend_metrics].agg(['mean', 'max', 'min', 'last'])
 
 
