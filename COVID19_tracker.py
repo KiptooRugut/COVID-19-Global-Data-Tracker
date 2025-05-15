@@ -236,3 +236,18 @@ def _plot_peaks(self, pdf):
         pdf.savefig(fig)
         plt.savefig(f"{self.output_png_prefix}Peaks.png")
         plt.close()
+
+
+def _plot_fatality_rates(self, pdf):
+        """Plot case fatality rates"""
+        fig, ax = plt.subplots(figsize=(10, 6))
+        self.analysis['fatality_rates'].plot(
+            kind='bar', ax=ax, color='purple'
+        )
+        ax.set_title('Case Fatality Rate (%)')
+        ax.set_ylabel('Fatality Rate %')
+        plt.xticks(rotation=45)
+        
+        pdf.savefig(fig)
+        plt.savefig(f"{self.output_png_prefix}FatalityRates.png")
+        plt.close()
