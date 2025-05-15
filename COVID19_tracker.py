@@ -290,3 +290,71 @@ def generate_report(self):
         Countries analyzed: {len(self.countries)}
         
         {'='*50}
+
+KEY FINDINGS:
+        
+        1. TOTAL STATISTICS:
+        {self.analysis['total_stats'].to_string()}
+        
+        2. PEAK ANALYSIS:
+        Cases:
+        {pd.DataFrame.from_dict(self.analysis['peak_cases'], orient='index').to_string() if self.analysis['peak_cases'] else 'N/A'}
+        
+        Deaths:
+        {pd.DataFrame.from_dict(self.analysis['peak_deaths'], orient='index').to_string() if self.analysis['peak_deaths'] else 'N/A'}
+        
+        3. FATALITY RATES (%):
+        {self.analysis['fatality_rates'].to_string() if self.analysis['fatality_rates'] is not None else 'N/A'}
+        
+        4. PER MILLION STATISTICS:
+        {self.analysis['per_million_stats']['cases'].to_string() if self.analysis['per_million_stats'] and 'cases' in self.analysis['per_million_stats'] else 'N/A'}
+        
+        5. RECENT TRENDS (last 30 days):
+        {self.analysis['trend_analysis'].to_string()}
+        """
+        
+        with open("COVID19_Findings.txt", "w") as f:
+            f.write(report)
+        
+        print(report)
+        return report
+
+if __name__ == "__main__":
+    tracker = COVID19Tracker()
+    
+    # Try multiple possible file locations
+    data_files = [
+        "data/owid-covid-data.csv",
+        "owid-covid-data.csv",
+        "covid-data.csv"
+    ]
+    
+    loaded = False
+    for file in data_files:
+        if os.path.exists(file):
+            print(f"Found data file at: {file}")
+            loaded = tracker.load_data(file)
+            if loaded:
+                break
+                
+    if not loaded:
+        print("Could not find data file. Please ensure it exists in one of these locations:")
+        print("\n".join(data_files))
+        exit(1)
+    
+    print("Analyzing data...")
+    analysis = tracker.analyze()
+    
+    if analysis:
+        print("Creating visualizations...")
+        tracker.visualize()
+        
+        print("Generating report...")
+        report = tracker.generate_report()
+        
+        print(f"""
+        Analysis complete!
+        - PDF report saved to: {tracker.output_pdf}
+        - PNG visualizations saved with prefix: {tracker.output_png_prefix}
+        - Text report saved to: COVID19_Findings.txt
+        """)
