@@ -209,3 +209,30 @@ def _plot_timeseries(self, pdf):
         plt.savefig(f"{self.output_png_prefix}Timeseries.png")
         plt.close()
 
+
+def _plot_peaks(self, pdf):
+        """Plot peak cases and deaths"""
+        fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+        
+        # Peak cases
+        if self.analysis['peak_cases']:
+            peak_cases = pd.DataFrame.from_dict(
+                self.analysis['peak_cases'], 
+                orient='index'
+            )['value']
+            peak_cases.plot(kind='bar', ax=axes[0], color='orange')
+            axes[0].set_title('Peak Daily Cases')
+        
+        # Peak deaths
+        if self.analysis['peak_deaths']:
+            peak_deaths = pd.DataFrame.from_dict(
+                self.analysis['peak_deaths'], 
+                orient='index'
+            )['value']
+            peak_deaths.plot(kind='bar', ax=axes[1], color='red')
+            axes[1].set_title('Peak Daily Deaths')
+        
+        plt.tight_layout()
+        pdf.savefig(fig)
+        plt.savefig(f"{self.output_png_prefix}Peaks.png")
+        plt.close()
