@@ -251,3 +251,27 @@ def _plot_fatality_rates(self, pdf):
         pdf.savefig(fig)
         plt.savefig(f"{self.output_png_prefix}FatalityRates.png")
         plt.close()
+
+
+def _plot_per_million(self, pdf):
+        """Plot per million statistics"""
+        fig, axes = plt.subplots(1, 2, figsize=(14, 6))
+        
+        # Cases per million
+        if 'cases' in self.analysis['per_million_stats']:
+            self.analysis['per_million_stats']['cases']['total_cases_per_million'].plot(
+                kind='bar', ax=axes[0], color='blue'
+            )
+            axes[0].set_title('Total Cases per Million')
+        
+        # Deaths per million
+        if 'deaths' in self.analysis['per_million_stats']:
+            self.analysis['per_million_stats']['deaths']['total_deaths_per_million'].plot(
+                kind='bar', ax=axes[1], color='maroon'
+            )
+            axes[1].set_title('Total Deaths per Million')
+        
+        plt.tight_layout()
+        pdf.savefig(fig)
+        plt.savefig(f"{self.output_png_prefix}PerMillion.png")
+        plt.close()
