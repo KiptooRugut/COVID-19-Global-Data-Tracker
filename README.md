@@ -28,6 +28,8 @@ A Python-based analytical tool that processes, analyzes, and visualizes global C
 ### Requirements
 
 - Python 3
+- Python3 -m venv venv                                                
+  source ./venv/bin/activate
 - Required packages:
   ```bash
   pip install pandas matplotlib seaborn numpy
