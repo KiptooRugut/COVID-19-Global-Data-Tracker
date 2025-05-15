@@ -36,3 +36,40 @@ class COVID19Tracker:
         
         self.output_pdf = "COVID19_Analysis_Report.pdf"
         self.output_png_prefix = "COVID19_Visualization_"
+
+
+def load_data(self, filepath):
+        """Load data from CSV file with enhanced error handling"""
+        try:
+            if not os.path.exists(filepath):
+                raise FileNotFoundError(f"Data file not found at: {filepath}")
+                
+            print(f"Loading data from {filepath}...")
+            
+            # Suppress warnings during data loading
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                self.df = pd.read_csv(filepath, parse_dates=['date'])
+            
+            # Verify required columns exist
+            required_cols = ['date', 'location'] + self.metrics
+            missing_cols = [col for col in required_cols 
+                          if col not in self.df.columns]
+            if missing_cols:
+                print(f"Note: Missing some columns in data: {missing_cols}")
+                # Remove missing metrics from our analysis
+                self.metrics = [col for col in self.metrics if col in self.df.columns]
+            
+            # Filter to selected countries
+            self.df = self.df[self.df['location'].isin(self.countries)]
+            if self.df.empty:
+                raise ValueError("No data found for selected countries")
+                
+            self._clean_data()
+            print(f"Data loaded successfully with {len(self.df)} records")
+            print(f"Available metrics: {self.metrics}")
+            return True
+            
+        except Exception as e:
+            print(f"Error loading data: {str(e)}")
+            return False
