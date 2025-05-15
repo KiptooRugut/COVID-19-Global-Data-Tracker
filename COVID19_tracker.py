@@ -143,4 +143,18 @@ def _calculate_fatality_rates(self):
         return (latest['total_deaths'] / latest['total_cases'] * 100).round(2)
 
 
+def _calculate_per_million_stats(self):
+        """Calculate per million statistics"""
+        stats = {}
+        for metric in ['cases', 'deaths']:
+            total_col = f'total_{metric}'
+            per_mil_col = f'total_{metric}_per_million'
+            
+            if per_mil_col in self.df.columns:
+                latest = self.df.groupby('location').last()
+                stats[metric] = latest[[total_col, per_mil_col]]
+        return stats if stats else None
+
+
+
 
